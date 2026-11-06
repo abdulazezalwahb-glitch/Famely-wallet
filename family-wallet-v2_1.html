@@ -65,6 +65,7 @@ label{font-size:13px;color:var(--mu);display:block;margin-top:10px}
 .bdg{background:var(--rd);color:#fff;border-radius:10px;padding:0 7px;font-size:12px;margin-inline-start:4px}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="wrap">
@@ -359,12 +360,41 @@ async function rec_(){const b=$('mic');if(MR){MR.stop();return}
    const id='a'+Date.now();await col('groups/'+CH+'/aud').doc(id).set({d});await sendM({type:'v',aid:id,dur})};
   MR.start();b.textContent='إيقاف وإرسال';MTO=setTimeout(()=>MR&&MR.stop(),40000)}catch(e){MR=null;alert('التسجيل الصوتي غير متاح هنا')}}
 async function playV(g,a){try{const d=(await db.doc('groups/'+g+'/aud/'+a).get()).data();if(d&&/^data:(audio|video)\//.test(d.d))new Audio(d.d).play()}catch(e){alert('تعذر التشغيل')}}
-async function boot(){try{const u=await claude.use('user');db=await claude.use('db');uid=u&&await u.id();ADM=!!(u&&((u.isOwner&&u.isOwner())||(u.canEdit&&u.canEdit())))}catch(e){}
- if(!db||!uid){$('p0').innerHTML='<div class="empty">سجّل الدخول في Claude لاستخدام التطبيق</div>';return}
- MY='data/users/'+uid;
- try{const d=await db.doc('profiles/'+uid).get();PR=d.exists?d.data():null}catch(e){}
- if(!PR){$('ob').classList.add('on');return}
- start()}
+const SUPABASE_URL = 'https://xxxx.supabase.co'; // استبدله برابط مشروعتك من Supabase
+const SUPABASE_ANON_KEY = 'eyJhbGciOi...';      // استبدله بمفتاح anon من Supabase
+
+async function boot() {
+  try {
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    uid = localStorage.getItem('app_user_id') || 'user_' + Math.random().toString(36).substring(2, 9);
+    localStorage.setItem('app_user_id', uid);
+    
+    db = supabaseClient;
+    ADM = true;
+  } catch (e) {
+    console.error(e);
+  }
+
+  if (!db || !uid) {
+    $('p0').innerHTML = '<div class="empty">تعذر الاتصال بقاعدة البيانات</div>';
+    return;
+  }
+  
+  MY = 'profiles/' + uid;
+  try {
+    const { data: profileData } = await db.from('profiles').select('*').eq('id', uid).single();
+    PR = profileData || null;
+  } catch (e) {
+    PR = null;
+  }
+
+  if (!PR) {
+    $('ob').classList.add('on');
+    return;
+  }
+  start();
+}
 async function obSave(){const n=$('on').value.trim(),p=$('op').value.trim();if(!n||p.replace(/\D/g,'').length<8){alert('اكتب الاسم ورقم هاتف صحيح');return}
  PR={name:n,phone:p};await db.doc('profiles/'+uid).set(PR);$('ob').classList.remove('on');start()}
 function start(){me=dn(PR);col('profiles').onSnapshot(q=>{PS={};q.docs.forEach(d=>PS[d.id]=d.data());if(PS[uid])PR=PS[uid];me=dn(PR);draw()});
