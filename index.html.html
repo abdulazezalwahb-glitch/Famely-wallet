@@ -63,8 +63,27 @@ label{font-size:13px;color:var(--mu);display:block;margin-top:10px}
 #cm{flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:8px 2px}.cin{display:flex;gap:6px;align-items:center;padding-top:8px}.cin input{margin:0;flex:1;min-width:0}
 .tray{display:flex;gap:8px;overflow-x:auto;padding:8px 0}.tray img{width:64px;height:64px;object-fit:contain;border:1px solid var(--bd);border-radius:10px;background:var(--bg);flex:none}
 .bdg{background:var(--rd);color:#fff;border-radius:10px;padding:0 7px;font-size:12px;margin-inline-start:4px}
+.card{box-shadow:0 1px 2px #0000000a,0 8px 22px #0000000a}
+.tabs{position:sticky;top:6px;z-index:5;backdrop-filter:blur(10px);background:color-mix(in srgb,var(--card) 88%,transparent);box-shadow:0 6px 18px #0000000d}
+.tabs button{transition:.2s}.tabs button.on{box-shadow:0 4px 12px #0f766e44}
+.btn,.chip,.it{transition:transform .12s,opacity .2s}.btn:active,.chip:active{transform:scale(.97)}.it:active{transform:scale(.985)}
+.sheet.on .pan{animation:up .25s ease}@keyframes up{from{transform:translateY(40px);opacity:0}}
+.sh{font-size:15px;margin:20px 4px 10px;color:var(--mu)}
+.cx{background:linear-gradient(135deg,#0f766e,#115e59 55%,#1e3a5f);color:#fff;border-radius:24px;padding:18px;box-shadow:0 14px 34px #0f766e40;position:relative;overflow:hidden}
+.cx:before{content:"";position:absolute;inset:-40% -20% auto auto;width:240px;height:240px;border-radius:50%;background:radial-gradient(#ffffff2e,transparent 70%);pointer-events:none}
+.cxh{font-weight:800;opacity:.9;margin-bottom:6px}.cx .amt{background:#ffffff1f;color:#fff;border:1px solid #ffffff33}
+.cx select{background:#ffffff26;color:#fff;border:0;border-radius:12px;padding:8px;margin:0;font-weight:800}.cx select option{color:#000}
+.cxs{display:flex;align-items:center;gap:8px;margin:12px 0;position:relative}.cxp{flex:1;display:flex;align-items:center;gap:8px;min-width:0}.cxp select{flex:1;min-width:0}
+.sw2{border:0;background:#ffffff2e;color:#fff;border-radius:50%;width:40px;height:40px;display:grid;place-items:center;cursor:pointer;flex:none}.sw2 .si{width:20px;height:20px}
+.cx .res{color:#fff;font-size:30px;position:relative}.cxr{text-align:center;opacity:.8;font-size:13px;direction:ltr;position:relative}
+.cb{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;font-style:normal;font-weight:800;font-size:12px;flex:none;box-shadow:0 3px 8px #0003}
+.qg{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px;margin-top:12px}.qg div{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px;text-align:center;display:flex;flex-direction:column;gap:2px;direction:ltr}.qg small{color:var(--mu);font-size:11px}.qg b{color:var(--ac)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.cc2{background:var(--card);border:1px solid var(--bd);border-top:4px solid var(--g);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:6px}.cc2 small{display:block;color:var(--mu);font-size:12px}.cc2 .cv{font-size:13px;font-weight:700;direction:ltr;text-align:right}.cc2 input{margin:0;padding:8px;direction:ltr}.cc2 label{margin:0;font-size:11px}.cvu{padding:8px;color:var(--mu);direction:ltr}
+.chw{position:relative;height:200px}.cen{position:absolute;inset:0;display:grid;place-content:center;text-align:center;font-weight:800;font-size:20px;pointer-events:none}.cen small{color:var(--mu);font-size:12px}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -95,7 +114,7 @@ label{font-size:13px;color:var(--mu);display:block;margin-top:10px}
 <div class="sheet" id="ob" style="align-items:center;z-index:60"><div class="pan" style="border-radius:22px;max-width:380px;margin:auto;width:92%"><h3>أهلاً بك في محفظة العائلة</h3><small style="color:var(--mu)">اكتب بياناتك حتى يتعرف عليك أفراد عائلتك</small><label>الاسم</label><input id="on" maxlength="30"><label>رقم الهاتف</label><input id="op" inputmode="tel" style="direction:ltr" placeholder="07xxxxxxxxx"><button class="btn" onclick="obSave()">متابعة</button></div></div>
 <div class="sheet" id="gs" onclick="if(event.target===this)$('gs').classList.remove('on')"><div class="pan"><h3>مجموعة جديدة</h3><label>الاسم</label><input id="gn" placeholder="مثلاً: بيتنا"><label>النوع</label><select id="gk"><option value="fam">العائلة (البيت الواحد)</option><option value="ext">العائلة الكبيرة</option></select><button class="btn" onclick="mkG()">إنشاء</button><h3 style="margin-top:22px">الانضمام برقم أو QR</h3><input id="jc" maxlength="6" placeholder="ABC123" style="direction:ltr;text-transform:uppercase"><div class="cols"><button class="btn" onclick="joinC($('jc').value.trim().toUpperCase())">انضمام</button><button class="btn" onclick="scan()">مسح QR</button></div><div id="sc"></div></div></div>
 <script>
-const IC={fork:'<path d="M7 3v8M5 3v5a2 2 0 004 0V3M7 11v10M17 3c-2 2-3 5-3 8h3v10"/>',cup:'<path d="M4 8h13v6a5 5 0 01-5 5H9a5 5 0 01-5-5zM17 10h2a2 2 0 010 5h-2M7 3v2M11 3v2"/>',car:'<path d="M5 16v-5l2-5h10l2 5v5zM5 16v3M19 16v3M8 13h.01M16 13h.01"/>',home:'<path d="M3 11l9-8 9 8v10H3z"/>',bag:'<path d="M5 8h14l-1 13H6zM9 8V6a3 3 0 016 0v2"/>',tick:'<path d="M3 6h18v3a2 2 0 000 6v3H3v-3a2 2 0 000-6z"/>',phone:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',box:'<path d="M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',chev:'<path d="M6 9l6 6 6-6"/>'};
+const IC={fork:'<path d="M7 3v8M5 3v5a2 2 0 004 0V3M7 11v10M17 3c-2 2-3 5-3 8h3v10"/>',cup:'<path d="M4 8h13v6a5 5 0 01-5 5H9a5 5 0 01-5-5zM17 10h2a2 2 0 010 5h-2M7 3v2M11 3v2"/>',car:'<path d="M5 16v-5l2-5h10l2 5v5zM5 16v3M19 16v3M8 13h.01M16 13h.01"/>',home:'<path d="M3 11l9-8 9 8v10H3z"/>',bag:'<path d="M5 8h14l-1 13H6zM9 8V6a3 3 0 016 0v2"/>',tick:'<path d="M3 6h18v3a2 2 0 000 6v3H3v-3a2 2 0 000-6z"/>',phone:'<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',box:'<path d="M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',chev:'<path d="M6 9l6 6 6-6"/>',swap:'<path d="M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/>'};
 const CK=['fork','cup','car','home','bag','tick','phone','box'];
 const ic=k=>`<svg class="si" viewBox="0 0 24 24">${IC[k]||IC.box}</svg>`;
 const CATS=[['طعام','fork'],['قهوة','cup'],['مواصلات','car'],['سكن','home'],['تسوق','bag'],['ترفيه','tick'],['اتصالات','phone'],['أخرى','box']];
@@ -149,7 +168,7 @@ function draw(){$('an').textContent=SYS.name||'محفظة العائلة';
  $('avg').textContent=fmt(tot/span);$('cnt').textContent=its.length;
  const b=bud();$('bud').innerHTML=b?`<div class="pb"><i style="width:${Math.min(100,tot/b*100)}%"></i></div><div class="bt"><span>${Math.round(tot/b*100)}% من الميزانية</span><span>${tot<=b?'المتبقي '+fmt(b-tot):'تجاوز بـ '+fmt(tot-b)} ${S.base}</span></div>`+(tot>b?'<div class="warn over"> تجاوزت الميزانية!</div>':tot>=b*.8?'<div class="warn">تنبيه: اقتربت من نهاية الميزانية</div>':''):'<button class="tb" style="margin-top:10px" onclick="tab(4)">حدد ميزانية المجموعة</button>';
  if(curTrip().kind!='me'&&(curTrip().ppl||[]).length<2)$('bud').innerHTML+=' <button class="tb" style="margin-top:10px" onclick="tab(4)">ادعُ أفراد العائلة للتقسيم</button>';
- if(curTab==0)list();else if(curTab==1)stats(tot,span);else if(curTab==2)rates();else if(curTab==3)groupsTab();else if(!(document.activeElement&&document.activeElement.tagName=='INPUT'&&$('p4').contains(document.activeElement)))sett()}
+ if(curTab==0)list();else if(curTab==1)stats(tot,span);else if(curTab==2){if(!(document.activeElement&&document.activeElement.tagName=='INPUT'&&$('p2').contains(document.activeElement)))rates()}else if(curTab==3)groupsTab();else if(!(document.activeElement&&document.activeElement.tagName=='INPUT'&&$('p4').contains(document.activeElement)))sett()}
 
 function list(){
  if(!IT().length){$('p0').innerHTML='<div class="empty">لا توجد مصاريف بعد <br>اضغط «مصروف جديد» للبدء</div>';return}
@@ -178,22 +197,31 @@ function stats(tot,span){
  <div class="card"><h3>حسب العملة المدفوعة</h3>${bars(byCur,k=>k,v=>fmt(v))}</div>
  <div class="card"><h3>وقت الصرف</h3>${bars(per,k=>k,fmt)}</div>`}
 
-function rates(){
- const cs=Object.keys(S.rates);
- $('p2').innerHTML=`
- <div class="card"><h3> محوّل سريع</h3>
- <input class="amt" id="ca" type="number" inputmode="decimal" value="100" oninput="conv()">
- <div class="cols"><select id="cf" onchange="conv()">${opts('USD')}</select><select id="ct" onchange="conv()">${opts('TRY')}</select></div>
- <div class="res" id="cr"></div></div>
- <div class="card"><h3>أسعار الصرف (لكل 1 دولار)</h3>
- <small style="color:var(--mu)">الأسعار تقريبية، عدّلها حسب سعر الصرافة عندك.</small><br><br>
- ${cs.filter(c=>c!='USD').map(c=>`<div class="rr"><span>1 USD =</span><input type="number" inputmode="decimal" value="${S.rates[c]}" onchange="setRate('${c}',this.value)"><b>${c}</b></div>`).join('')}
- <label>إضافة عملة جديدة</label>
- <div class="rr"><input id="nc" placeholder="كود مثل GBP" style="text-transform:uppercase"><input id="nr" type="number" inputmode="decimal" placeholder="سعرها مقابل 1$"></div>
- <button class="btn" style="margin-top:4px" onclick="addCur()">إضافة العملة</button></div>`;
- conv()}
-function conv(){const a=parseFloat($('ca').value)||0,f=$('cf').value,t=$('ct').value;
- $('cr').textContent=fmt(cv(a,f,t))+' '+t+'  ·  1 '+f+' = '+fmt(cv(1,f,t))+' '+t}
+const CM={USD:['دولار أمريكي','$'],IQD:['دينار عراقي','د.ع'],TRY:['ليرة تركية','₺'],EUR:['يورو','€'],GBP:['جنيه إسترليني','£'],AED:['درهم إماراتي','د.إ'],SAR:['ريال سعودي','ر.س'],KWD:['دينار كويتي','د.ك'],JOD:['دينار أردني','د.أ'],EGP:['جنيه مصري','ج.م'],IRR:['ريال إيراني','﷼']};
+const PAL=['#0f766e','#d97706','#7c3aed','#e11d48','#2563eb','#059669','#db2777','#0891b2'];
+let CHS=[],CVF='USD',CVT='TRY',CVA=100;
+const cidx=c=>Math.max(0,Object.keys(S.rates).indexOf(c));
+const badge=c=>`<i class="cb" style="background:${PAL[cidx(c)%PAL.length]}">${esc((CM[c]||[0,c.slice(0,3)])[1])}</i>`;
+function rates(){CHS.forEach(c=>{try{c.destroy()}catch(e){}});CHS=[];
+ const cs=Object.keys(S.rates),b=S.base,its=IT();
+ if(!S.rates[CVF])CVF='USD';if(!S.rates[CVT])CVT=cs.find(c=>c!=CVF)||'USD';
+ $('p2').innerHTML=`<div class="cx"><div class="cxh">محوّل العملات</div>
+  <input class="amt" id="ca" type="number" inputmode="decimal" value="${esc(CVA)}" oninput="CVA=this.value;conv()">
+  <div class="cxs"><div class="cxp">${badge(CVF)}<select id="cf" onchange="CVF=this.value;rates()">${opts(CVF)}</select></div><button class="sw2" aria-label="تبديل" onclick="[CVF,CVT]=[CVT,CVF];rates()">${ic('swap')}</button><div class="cxp">${badge(CVT)}<select id="ct" onchange="CVT=this.value;rates()">${opts(CVT)}</select></div></div>
+  <div class="res" id="cr"></div><div class="cxr" id="cr2"></div></div>
+ <div class="qg">${[1,10,100,1000,10000].map(n=>`<div><small>${fmt(n)} ${CVF}</small><b>${fmt(cv(n,CVF,CVT))}</b><small>${CVT}</small></div>`).join('')}</div>
+ <h3 class="sh">أسعار الصرف</h3><div class="cg">${cs.map(c=>{const m=CM[c]||[c];return `<div class="cc2" style="--g:${PAL[cidx(c)%PAL.length]}"><div class="row2" style="justify-content:flex-start">${badge(c)}<div style="min-width:0"><b>${esc(c)}</b><small>${esc(m[0])}</small></div></div><div class="cv">1 ${esc(c)} = ${fmt(cv(1,c,b))} ${esc(b)}</div><label>لكل 1 دولار</label>${c=='USD'?'<div class="cvu">1</div>':`<input type="number" inputmode="decimal" value="${S.rates[c]}" onchange="setRate('${esc(c)}',this.value)">`}</div>`}).join('')}</div>
+ <div class="card"><h3>إضافة عملة</h3><div class="rr"><input id="nc" placeholder="الكود مثل GBP" style="text-transform:uppercase"><input id="nr" type="number" inputmode="decimal" placeholder="سعرها مقابل 1$"></div><button class="btn" style="margin-top:4px" onclick="addCur()">إضافة العملة</button></div>
+ ${its.length?`<h3 class="sh">مصروفك بالعملات</h3><div class="card"><div class="chw"><canvas id="c1"></canvas></div><div id="lg" style="margin-top:10px"></div></div><div class="card"><h3>آخر 14 يوماً (${esc(b)})</h3><div class="chw" style="height:180px"><canvas id="c2"></canvas></div></div>`:''}`;
+ conv();charts(its)}
+function conv(){const a=parseFloat(CVA)||0;$('cr').textContent=fmt(cv(a,CVF,CVT))+' '+CVT;$('cr2').textContent='1 '+CVF+' = '+fmt(cv(1,CVF,CVT))+' '+CVT}
+function charts(its){if(!its.length||!window.Chart||!$('c1'))return;const mu=getComputedStyle(document.documentElement).getPropertyValue('--mu').trim()||'#888',b=S.base,m={};
+ its.forEach(x=>m[x.cur]=(m[x.cur]||0)+cv(x.a,x.cur));const ks=Object.keys(m),tot=ks.reduce((q,k)=>q+m[k],0);
+ CHS.push(new Chart($('c1'),{type:'doughnut',data:{labels:ks,datasets:[{data:ks.map(k=>m[k]),backgroundColor:ks.map(k=>PAL[cidx(k)%PAL.length]),borderWidth:0}]},options:{cutout:'68%',animation:false,maintainAspectRatio:false,plugins:{legend:{display:false}}}}));
+ $('c1').parentNode.insertAdjacentHTML('beforeend',`<div class="cen">${fmt(tot)}<small>${esc(b)}</small></div>`);
+ $('lg').innerHTML=ks.map(k=>`<div class="row2" style="padding:4px 0"><span class="who">${badge(k)}${esc(k)}</span><b>${Math.round(m[k]/tot*100)}%</b></div>`).join('');
+ const days=[];for(let i=13;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'))}
+ CHS.push(new Chart($('c2'),{type:'line',data:{labels:days.map(d=>d.slice(5)),datasets:[{data:days.map(d=>its.filter(x=>x.d==d).reduce((q,x)=>q+cv(x.a,x.cur),0)),borderColor:'#14b8a6',backgroundColor:'#14b8a633',fill:true,tension:.4,pointRadius:0,borderWidth:2.5}]},options:{animation:false,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:mu,maxTicksLimit:5},grid:{display:false}},y:{ticks:{color:mu},grid:{color:'#8883'}}}}}))}
 function setRate(c,v){v=parseFloat(v);if(v>0){S.rates[c]=v;save();draw()}}
 function addCur(){const c=$('nc').value.trim().toUpperCase().slice(0,5),r=parseFloat($('nr').value);
  if(c&&r>0){S.rates[c]=r;save();draw()}}
@@ -359,7 +387,7 @@ async function rec_(){const b=$('mic');if(MR){MR.stop();return}
    const id='a'+Date.now();await col('groups/'+CH+'/aud').doc(id).set({d});await sendM({type:'v',aid:id,dur})};
   MR.start();b.textContent='إيقاف وإرسال';MTO=setTimeout(()=>MR&&MR.stop(),40000)}catch(e){MR=null;alert('التسجيل الصوتي غير متاح هنا')}}
 async function playV(g,a){try{const d=(await db.doc('groups/'+g+'/aud/'+a).get()).data();if(d&&/^data:(audio|video)\//.test(d.d))new Audio(d.d).play()}catch(e){alert('تعذر التشغيل')}}
-async function boot(){try{const u=await claude.use('user');db=await claude.use('db');uid=u&&await u.id();ADM=!!(u&&((u.isOwner&&u.isOwner())||(u.canEdit&&u.canEdit())))}catch(e){}
+async function boot(){try{const u=await claude.use('user');db=await claude.use('db');uid=u&&await u.id();ADM=!!(u&&((await u.isOwner())||(await u.canEdit())))}catch(e){}
  if(!db||!uid){$('p0').innerHTML='<div class="empty">سجّل الدخول في Claude لاستخدام التطبيق</div>';return}
  MY='data/users/'+uid;
  try{const d=await db.doc('profiles/'+uid).get();PR=d.exists?d.data():null}catch(e){}
@@ -370,6 +398,7 @@ async function obSave(){const n=$('on').value.trim(),p=$('op').value.trim();if(!
 function start(){me=dn(PR);col('profiles').onSnapshot(q=>{PS={};q.docs.forEach(d=>PS[d.id]=d.data());if(PS[uid])PR=PS[uid];me=dn(PR);draw()});
  db.doc('sys/cfg').onSnapshot(q=>{SYS=q.exists?q.data():{};applyTheme();draw()});if(ADM)col('groups').onSnapshot(q=>{AG=q.docs.map(d=>({id:d.id,...d.data()}));draw()});
  col(MY).onSnapshot(mine,()=>alert('تعذّر الاتصال'));if(jm)joinC(jm)}
+addEventListener('unhandledrejection',e=>{const r=e.reason||{};toast(r.code=='not_granted'?'ليس لديك صلاحية لهذا الإجراء':r.code=='quota_exceeded'||r.code=='resource_exhausted'?'تجاوزت حد التخزين':'تعذّر تنفيذ العملية')});
 applyTheme();draw();boot();
 </script>
 </body>
